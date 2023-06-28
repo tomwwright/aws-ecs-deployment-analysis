@@ -51,8 +51,8 @@ function writeTimelinesCsv(timelines: Iterable<Timeline>) {
     "taskConnect",
     "taskPullStart",
     "taskPullStop",
-    "taskStart",
     "ecsRegister",
+    "taskStart",
     "taskStopping",
     "taskExecutionStop",
     "taskStop",
@@ -137,8 +137,8 @@ type Timeline = {
   taskConnect?: string;
   taskPullStart?: string;
   taskPullStop?: string;
-  taskStart?: string;
   ecsRegister?: string;
+  taskStart?: string;
   taskStopping?: string;
   taskExecutionStop?: string;
   taskStop?: string;
