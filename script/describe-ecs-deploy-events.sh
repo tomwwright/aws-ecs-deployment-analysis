@@ -7,7 +7,7 @@ cutoff=$1
 echo "timestamp,serviceArn,message"
 
 # list recently updated stacks that may contain ECS services
-stacks=$(aws cloudformation list-stacks --stack-status-filter UPDATE_COMPLETE --query "StackSummaries[?LastUpdatedTime > \`$cutoff\`].StackId" | jq -r '.[]' | grep -v "cdk-deploy-roles" | grep -v "cdk-source-security-groups" | grep -v "migrations" | grep -v "db" | grep -v "data") 
+stacks=$(aws cloudformation list-stacks --query "StackSummaries[?LastUpdatedTime > \`$cutoff\`].StackId" | jq -r '.[]' | grep -v "cdk-deploy-roles" | grep -v "cdk-source-security-groups" | grep -v "migrations" | grep -v "db" | grep -v "data") 
 
 while read -r stack
 do
