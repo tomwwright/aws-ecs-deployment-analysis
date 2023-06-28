@@ -41,7 +41,7 @@ Capture ECS Task state change events into a CloudWatch Log Group with EventBridg
 Query started task events using following CloudWatch Log Insights query and save in `data/started-tasks.csv`
 
 ```
-fields detail.taskArn, detail.group, detail.createdAt, detail.connectivityAt, detail.pullStartedAt, detail.pullStoppedAt, detail.startedAt, detail.cpu, detail.memory, detail.attributes.0.value as arch
+fields detail.taskArn, detail.group, detail.createdAt, detail.connectivityAt, detail.pullStartedAt, detail.pullStoppedAt, detail.startedAt, detail.cpu, detail.memory, detail.attributes.0.value as arch, strcontains(concat(detail.attachments.0.type,detail.attachments.1.type) , "elb") as hasELB 
 | filter detail.lastStatus = "RUNNING"
 and detail.desiredStatus = "RUNNING"
 and detail.group like /service:/
@@ -54,7 +54,7 @@ and detail.launchType = "FARGATE"
 Query stopped task events using following CloudWatch Log Insights query and save in `data/stopped-tasks.csv`
 
 ```
-fields detail.taskArn, detail.group, detail.stoppingAt, detail.executionStoppedAt, detail.stoppedAt, detail.cpu, detail.memory, detail.attributes.0.value as arch
+fields detail.taskArn, detail.group, detail.stoppingAt, detail.executionStoppedAt, detail.stoppedAt, detail.cpu, detail.memory, detail.attributes.0.value as arch, strcontains(concat(detail.attachments.0.type,detail.attachments.1.type) , "elb") as hasELB 
 | filter detail.lastStatus = "STOPPED"
 and detail.desiredStatus = "STOPPED"
 and detail.stopCode	= "ServiceSchedulerInitiated"
