@@ -46,7 +46,7 @@ export class AnalysisFargateService extends Construct {
       {}
     );
     taskDefinition.addContainer("expressjs", {
-      image: ContainerImage.fromAsset(".", {
+      image: ContainerImage.fromAsset("docker", {
         platform: Platform.LINUX_AMD64,
       }),
       logging: LogDriver.awsLogs({ streamPrefix: "expressjs" }),
