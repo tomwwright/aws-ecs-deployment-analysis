@@ -78,7 +78,7 @@ export class AnalysisFargateService extends Construct {
       serviceName: id,
       securityGroups: [securityGroup],
       minHealthyPercent: useSafeDeployment ? 100 : 0,
-      maxHealthyPercent: useSafeDeployment ? 200 : 100,
+      maxHealthyPercent: 200,
     });
 
     if (healthCheckInterval) {
