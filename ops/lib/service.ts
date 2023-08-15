@@ -3,6 +3,7 @@ import { ISecurityGroup } from "aws-cdk-lib/aws-ec2";
 import { Platform } from "aws-cdk-lib/aws-ecr-assets";
 import {
   ContainerImage,
+  CpuArchitecture,
   FargateService,
   FargateTaskDefinition,
   ICluster,
@@ -22,6 +23,7 @@ type FargateServiceProps = {
   healthCheckInterval?: number;
   useSafeDeployment: boolean;
   startupDelay: number;
+  useArmArchitecture: boolean;
   version: string;
 };
 
@@ -32,22 +34,27 @@ export class AnalysisFargateService extends Construct {
 
     const {
       cluster,
-      securityGroup,
       healthCheckInterval,
-      useSafeDeployment,
+      securityGroup,
       startupDelay,
+      useArmArchitecture,
       useDockerHealthCheck,
+      useSafeDeployment,
       version,
     } = props;
 
-    const taskDefinition = new FargateTaskDefinition(
-      this,
-      "TaskDefinition",
-      {}
-    );
+    const taskDefinition = new FargateTaskDefinition(this, "TaskDefinition", {
+      runtimePlatform: {
+        cpuArchitecture: useArmArchitecture
+          ? CpuArchitecture.ARM64
+          : CpuArchitecture.X86_64,
+      },
+    });
     taskDefinition.addContainer("expressjs", {
       image: ContainerImage.fromAsset("docker", {
-        platform: Platform.LINUX_AMD64,
+        platform: useArmArchitecture
+          ? Platform.LINUX_ARM64
+          : Platform.LINUX_AMD64,
       }),
       logging: LogDriver.awsLogs({ streamPrefix: "expressjs" }),
       portMappings: [

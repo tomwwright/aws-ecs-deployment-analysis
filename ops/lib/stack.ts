@@ -37,6 +37,10 @@ export class FargateStack extends cdk.Stack {
       checks: true,
       nochecks: false,
     });
+    const armArchitectureConfigs = Object.entries({
+      arm: true,
+      x64: false,
+    });
     const startupDelayConfigs = Object.entries({
       fastup: 1000,
       midup: 5000,
@@ -46,34 +50,44 @@ export class FargateStack extends cdk.Stack {
     const configurations = [];
 
     for (const [
-      useDockerHealthCheckName,
-      useDockerHealthCheck,
-    ] of dockerHealthCheckConfigs) {
+      useArmArchitectureName,
+      useArmArchitecture,
+    ] of armArchitectureConfigs) {
       for (const [
-        healthCheckIntervalName,
-        healthCheckInterval,
-      ] of healthCheckIntervalConfigs) {
+        useDockerHealthCheckName,
+        useDockerHealthCheck,
+      ] of dockerHealthCheckConfigs) {
         for (const [
-          useSafeDeploymentName,
-          useSafeDeployment,
-        ] of safeDeploymentConfigs) {
-          for (const [startupDelayName, startupDelay] of startupDelayConfigs) {
-            const name = [
-              "analyse",
-              useSafeDeploymentName,
-              useDockerHealthCheckName,
-              healthCheckIntervalName,
+          healthCheckIntervalName,
+          healthCheckInterval,
+        ] of healthCheckIntervalConfigs) {
+          for (const [
+            useSafeDeploymentName,
+            useSafeDeployment,
+          ] of safeDeploymentConfigs) {
+            for (const [
               startupDelayName,
-            ].join("-");
-
-            configurations.push({
-              name,
-              healthCheckInterval,
-              useSafeDeployment,
-              useDockerHealthCheck,
               startupDelay,
-              version: props.version,
-            });
+            ] of startupDelayConfigs) {
+              const name = [
+                "analyse",
+                useArmArchitectureName,
+                useSafeDeploymentName,
+                useDockerHealthCheckName,
+                healthCheckIntervalName,
+                startupDelayName,
+              ].join("-");
+
+              configurations.push({
+                name,
+                healthCheckInterval,
+                startupDelay,
+                useArmArchitecture,
+                useDockerHealthCheck,
+                useSafeDeployment,
+                version: props.version,
+              });
+            }
           }
         }
       }
