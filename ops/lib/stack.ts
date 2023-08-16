@@ -27,7 +27,7 @@ export class FargateStack extends cdk.Stack {
     const healthCheckIntervalConfigs = Object.entries({
       nolb: undefined,
       fastlb: 10,
-      slowlb: 30,
+      slowlb: 60,
     });
     const safeDeploymentConfigs = Object.entries({
       safe: true,
@@ -43,7 +43,7 @@ export class FargateStack extends cdk.Stack {
     });
     const startupDelayConfigs = Object.entries({
       fastup: 1000,
-      midup: 5000,
+      midup: 10000,
       slowup: 30000,
     });
 
@@ -70,7 +70,7 @@ export class FargateStack extends cdk.Stack {
               startupDelay,
             ] of startupDelayConfigs) {
               const name = [
-                "analyse",
+                "test",
                 useArmArchitectureName,
                 useSafeDeploymentName,
                 useDockerHealthCheckName,
