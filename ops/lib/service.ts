@@ -56,7 +56,6 @@ export class AnalysisFargateService extends Construct {
           ? Platform.LINUX_ARM64
           : Platform.LINUX_AMD64,
       }),
-      logging: LogDriver.awsLogs({ streamPrefix: "expressjs" }),
       portMappings: [
         {
           containerPort: 3000,
