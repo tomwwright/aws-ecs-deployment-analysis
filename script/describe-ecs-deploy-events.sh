@@ -7,7 +7,10 @@ cutoff=$1
 echo "timestamp,serviceArn,message"
 
 # list recently updated stacks that may contain ECS services
-stacks=$(aws cloudformation list-stacks --query "StackSummaries[?LastUpdatedTime > \`$cutoff\`].StackId" | jq -r '.[]' | grep -v "cdk-deploy-roles" | grep -v "cdk-source-security-groups" | grep -v "migrations" | grep -v "db" | grep -v "data") 
+# stacks=$(aws cloudformation list-stacks --query "StackSummaries[?LastUpdatedTime > \`$cutoff\` && starts_with(StackStatus, \`UPDATE\`)].StackId" | jq -r '.[]' | grep -v "cdk-deploy-roles" | grep -v "cdk-source-security-groups" | grep -v "migrations" | grep -v "db" | grep -v "data")
+
+# or use specifically the ecs-deployment-analysis data
+stacks=("ecs-deployment-analysis")
 
 while read -r stack
 do
@@ -22,7 +25,7 @@ do
 
       # retrieve deployment events from cloudformation for service
       # assume that 200 items will be enough -- paginating this for old stacks takes forever
-      cloudformation=$(aws cloudformation describe-stack-events --stack-name $stack --max-items 200 --query "StackEvents[?Timestamp > \`$cutoff\`]" | jq -r ".[] | select(.LogicalResourceId == \"$id\" and (.ResourceStatus == \"UPDATE_IN_PROGRESS\" or .ResourceStatus == \"UPDATE_COMPLETE\"  or .ResourceStatus == \"UPDATE_FAILED\")) | [.Timestamp, .PhysicalResourceId, .ResourceStatus] | join(\",\")")
+      cloudformation=$(aws cloudformation describe-stack-events --stack-name $stack --max-items 400 --query "StackEvents[?Timestamp > \`$cutoff\`]" | jq -r ".[] | select(.LogicalResourceId == \"$id\" and (.ResourceStatus == \"UPDATE_IN_PROGRESS\" or .ResourceStatus == \"UPDATE_COMPLETE\"  or .ResourceStatus == \"UPDATE_FAILED\")) | [.Timestamp, .PhysicalResourceId, .ResourceStatus] | join(\",\")")
 
       # retrieve deployment events from ecs for service
       cluster=$(echo $arn | cut -f2 -d '/')
