@@ -25,7 +25,7 @@ Query ECS service deployment configuration
 Query CloudFormation and ECS deployment events (this takes a long time)
 
 ```sh
-cutoff="2023-06=19"
+cutoff="2023-06-19"
 ./script/describe-ecs-deploy-events.sh $cutoff | tee data/deploy-events-$cutoff.csv
 ```
 
