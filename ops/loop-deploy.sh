@@ -1,6 +1,8 @@
 #!/bin/bash
 
-for ((i=1;i<=20;i++)); 
+# first for creation, then 15 updates to generate data
+# 15 because ECS Service events max at 100, and each deploy takes 5-7 events
+for ((i=1;i<=16;i++)); 
 do 
   echo ""
   echo ""
