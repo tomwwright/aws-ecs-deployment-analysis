@@ -1,6 +1,10 @@
 #!/bin/bash
 
-clusters=$(aws ecs list-clusters | jq -r '.clusterArns[]')
+# list clusters
+# clusters=$(aws ecs list-clusters | jq -r '.clusterArns[]')
+
+# or use specifically the ecs-deployment-analysis data
+clusters=("ecs-deployment-analysis")
 
 echo "clusterArn,serviceArn,desiredCount,minimumPercent,maximumPercent"
 
