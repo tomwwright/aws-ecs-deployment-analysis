@@ -8,7 +8,6 @@ import {
   FargateTaskDefinition,
   ICluster,
   LinuxParameters,
-  LogDriver,
 } from "aws-cdk-lib/aws-ecs";
 import {
   ApplicationProtocol,
@@ -24,6 +23,7 @@ type FargateServiceProps = {
   useSafeDeployment: boolean;
   startupDelay: number;
   useArmArchitecture: boolean;
+  assignPublicIp?: boolean;
   version: string;
 };
 
@@ -85,6 +85,7 @@ export class AnalysisFargateService extends Construct {
       securityGroups: [securityGroup],
       minHealthyPercent: useSafeDeployment ? 100 : 0,
       maxHealthyPercent: 200,
+      assignPublicIp: props.assignPublicIp ?? false,
     });
 
     if (healthCheckInterval) {
